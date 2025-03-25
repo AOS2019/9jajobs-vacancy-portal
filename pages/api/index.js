@@ -1,7 +1,7 @@
 // pages/index.js
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import styles from "../assets/css/styles.css"; // Optionally, create this file or use your own CSS
+//import styles from "../assets/css/styles.css"; // Optionally, create this file or use your own CSS
 
 export default function Home() {
   const [jobs, setJobs] = useState([]);
