@@ -1,9 +1,7 @@
-'use client';
-
+// pages/index.js
 import { useState, useEffect } from "react";
-import Script from 'next/script';
 import Link from "next/link";
-import Head from 'next/head';
+import styles from "../assets/css/styles.css"; // Optionally, create this file or use your own CSS
 
 export default function Home() {
   const [jobs, setJobs] = useState([]);
@@ -20,7 +18,7 @@ export default function Home() {
   });
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Fetch jobs when component mounts
+  // Fetch jobs on mount
   useEffect(() => {
     fetch("/api/jobs")
       .then((res) => res.json())
@@ -30,12 +28,10 @@ export default function Home() {
       .catch((err) => console.error(err));
   }, []);
 
-  // Handle form field changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle job submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newJob = {
@@ -43,7 +39,7 @@ export default function Home() {
       datePosted: new Date().toISOString().split("T")[0],
     };
 
-    const res = await fetch("./pages/api/postJob", {
+    const res = await fetch("/api/postJob", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newJob),
@@ -52,7 +48,7 @@ export default function Home() {
       setSuccessMessage("Job post submitted successfully!");
       setTimeout(() => {
         setSuccessMessage("");
-        // Clear the form and reload jobs
+        // Clear form fields and reload jobs
         setFormData({
           title: "",
           company: "",
@@ -69,23 +65,19 @@ export default function Home() {
   };
 
   return (
-    <>
-        <Head>
-        <Script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        strategy="beforeInteractive" // Ensures jQuery loads before other scripts
-      />
-          <link rel="stylesheet" href="./public/assets/css/styles.css" />
-        </Head>
-        {<div>
+    <div>
       <header>
         <h1>9jaJobPortal</h1>
         <p>Discover the Latest Job Vacancies in Nigeria</p>
       </header>
 
       <nav>
-        <a href="#" onClick={() => setFormVisible(false)}>Home</a>
-        <a href="#" onClick={() => setFormVisible(!formVisible)}>Post a Job</a>
+        <a href="#" onClick={() => setFormVisible(false)}>
+          Home
+        </a>
+        <a href="#" onClick={() => setFormVisible(!formVisible)}>
+          Post a Job
+        </a>
         <a href="#">Contact Us</a>
       </nav>
 
@@ -102,7 +94,8 @@ export default function Home() {
                 <Link href={`/jobs/${job._id}`}>{job.title}</Link>
               </h2>
               <p className="job-details">
-                Company: {job.company} | Location: {job.location} | Date Posted: {job.datePosted}
+                Company: {job.company} | Location: {job.location} | Date Posted:{" "}
+                {job.datePosted}
               </p>
               <p>
                 {job.description.length > 100
@@ -154,7 +147,7 @@ export default function Home() {
               <input
                 type="text"
                 name="keyResponsibilities"
-                placeholder="Key Responsibilities (separated by commas)"
+                placeholder="Key Responsibilities. Please separate by commas"
                 value={formData.keyResponsibilities}
                 onChange={handleChange}
                 required
@@ -162,7 +155,7 @@ export default function Home() {
               <input
                 type="text"
                 name="requiredSkills"
-                placeholder="Required Skills (separated by commas)"
+                placeholder="Required Skills. Please separate by commas"
                 value={formData.requiredSkills}
                 onChange={handleChange}
                 required
@@ -178,7 +171,7 @@ export default function Home() {
               <input
                 type="text"
                 name="applicationMethod"
-                placeholder="Application Method (e.g., email or link)"
+                placeholder="Method of Application e.g email or link"
                 value={formData.applicationMethod}
                 onChange={handleChange}
                 required
@@ -214,8 +207,6 @@ export default function Home() {
       <footer>
         <p>&copy; 2025 9jaJobPortal. All Rights Reserved.</p>
       </footer>
-    </div>}
-      </>
-    
+    </div>
   );
 }
